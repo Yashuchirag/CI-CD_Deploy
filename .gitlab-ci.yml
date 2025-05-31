@@ -1,6 +1,24 @@
+stages:
+  - test
+  - build
+
 run_tests:
+  stage: test
   image: python:3.9-slim-buster
   before_script:
-    - apt-get update && apt-get install make
+    - apt-get update && apt-get install -y make python3-venv
   script: 
     - make test
+
+build_image:
+  stage: build
+  image: docker:28.2.2
+  services:
+    - docker:28.2.2-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  before_script:
+    - echo "$REGISTRY_PASS" | docker login -u "$REGISTRY_USER" --password-stdin
+  script:
+    - docker build -t yashuchirag/personalproject:python-app-1.0 .
+    - docker push yashuchirag/personalproject:python-app-1.0
