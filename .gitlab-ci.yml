@@ -20,5 +20,7 @@ build_image:
   before_script:
     - echo "$REGISTRY_PASS" | docker login -u "$REGISTRY_USER" --password-stdin
   script:
-    - docker build -t yashuchirag/personalproject:python-app-1.0 .
+    - docker build -t yashuchirag/personalproject:python-app-1.0 -f build/Dockerfile .
     - docker push yashuchirag/personalproject:python-app-1.0
+  only:
+    - main 
